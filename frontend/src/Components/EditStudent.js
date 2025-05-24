@@ -19,7 +19,7 @@ const EditStudent = ({ student, onClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:5000/students/${formData.RegNo}`, formData)
+    axios.put(`http://localhost:5000/students/${formData.regNo}`, formData)
       .then(response => {
         onSave(formData);
         onClose();
@@ -33,21 +33,22 @@ const EditStudent = ({ student, onClose, onSave }) => {
     <div className="edit-student-form">
       <h2>Edit Student</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input type="text" name="Name" value={formData.Name} onChange={handleChange} />
-        </label>
-        <label>
-          Department:
-          <input type="text" name="Department" value={formData.Department} onChange={handleChange} />
-        </label>
-        <label>
-          Class:
-          <input type="text" name="Class" value={formData.Class} onChange={handleChange} />
-        </label>
-        <button type="submit">Save</button>
-        <button type="button" onClick={onClose}>Cancel</button>
-      </form>
+  <label>
+    Name:
+    <input type="text" name="name" value={formData.name} onChange={handleChange} />
+  </label>
+  <label>
+    Department:
+    <input type="text" name="department" value={formData.department} onChange={handleChange} />
+  </label>
+  <label>
+    Class:
+    <input type="text" name="class" value={formData.class} onChange={handleChange} />
+  </label>
+  <button type="submit">Save</button>
+  <button type="button" onClick={onClose}>Cancel</button>
+</form>
+
     </div>
   );
 };
