@@ -8,19 +8,19 @@ const StudentDetail = ({ student, onClose }) => {
         <tbody>
           <tr>
             <th>RegNo:</th>
-            <td>{student.RegNo}</td>
+            <td>{student.regNo}</td>
           </tr>
           <tr>
             <th>Name:</th>
-            <td>{student.Name}</td>
+            <td>{student.name}</td>
           </tr>
           <tr>
             <th>Department:</th>
-            <td>{student.Department}</td>
+            <td>{student.department}</td>
           </tr>
           <tr>
             <th>Class:</th>
-            <td>{student.Class}</td>
+            <td>{student.class}</td>
           </tr>
         </tbody>
       </table>

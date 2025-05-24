@@ -46,7 +46,7 @@ const StudentTable = () => {
 
   const handleSaveStudent = (updatedStudent) => {
     setStudents(students.map(student =>
-      student.RegNo === updatedStudent.RegNo ? updatedStudent : student
+      student.regNo === updatedStudent.regNo ? updatedStudent : student
     ));
   };
 
@@ -55,7 +55,7 @@ const StudentTable = () => {
       axios.delete(`http://localhost:5000/students/${regNo}`)
         .then(response => {
           console.log('Student deleted successfully:', response.data);
-          setStudents(students.filter(student => student.RegNo !== regNo));
+          setStudents(students.filter(student => student.regNo !== regNo));
         })
         .catch(error => {
           console.error('There was an error deleting the student:', error);
@@ -81,11 +81,11 @@ const StudentTable = () => {
             </thead>
             <tbody>
               {students.map((student) => (
-                <tr key={student.RegNo}>
-                  <td>{student.RegNo}</td>
-                  <td>{student.Name}</td>
-                  <td>{student.Department}</td>
-                  <td>{student.Class}</td>
+                <tr key={student.regNo}>
+                  <td>{student.regNo}</td>
+                  <td>{student.name}</td>
+                  <td>{student.department}</td>
+                  <td>{student.class}</td>
                   <td>
                     <button className="action-btn view" onClick={() => handleViewStudentClick(student)}>👁️</button>
                     <button
@@ -96,7 +96,7 @@ const StudentTable = () => {
                     </button>
                     <button
                       className="action-btn delete"
-                      onClick={() => handleDeleteStudentClick(student.RegNo)}
+                      onClick={() => handleDeleteStudentClick(student.regNo)}
                     >
                       ❌
                     </button>
