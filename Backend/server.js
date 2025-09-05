@@ -1,65 +1,37 @@
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+// server.js (or index.js)
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import resumeRoutes from "./routes/resumeRoutes.js";
+import aiHelperRoutes from "./routes/aiHelperRoutes.js";
+import admin from "firebase-admin"; // Import admin SDK
+// Corrected: Use require() for JSON import for broader compatibility
+import { createRequire } from 'module'; // Import createRequire for ES Modules
+const require = createRequire(import.meta.url); // Create a require function for current module
+const serviceAccountKey = require("./serviceAccountKey.json"); // Adjust path and filename
 
+
+dotenv.config();
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root123',
-  database: 'jnc'
+// Initialize Firebase Admin SDK
+admin.initializeApp({
+  // Corrected: Use serviceAccountKey here, matching the import name
+  credential: admin.credential.cert(serviceAccountKey)
 });
 
-db.connect(err => {
-  if (err) {
-    throw err;
-  }
-  console.log('MySQL Connected...');
-});
+// app.use(cors()); // You can remove this commented line
+app.use(cors({
+  origin: 'http://localhost:3000' // Your React app's development URL
+}));
+app.use(express.json());
+app.use("/api/resumes", resumeRoutes);
+app.use("/api/ai", aiHelperRoutes);
 
-// Get all students
-app.get('/students', (req, res) => {
-  const sql = 'SELECT * FROM students';
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
+// API routes placeholder
+app.get("/", (req, res) => res.send("API Running"));
 
-// Add a student
-app.post('/students', (req, res) => {
-  const { regNo, name, department, class: classValue } = req.body;
-  const sql = 'INSERT INTO students (regNo, name, department, class) VALUES (?, ?, ?, ?)';
-  db.query(sql, [regNo, name, department, classValue || null], (err, result) => {
-    if (err) throw err;
-    res.send('Student added...');
-  });
-});
-
-// Update a student
-app.put('/students/:regNo', (req, res) => {
-  const { regNo } = req.params;
-  const { name, department, class: classValue } = req.body;
-  const sql = 'UPDATE students SET name = ?, department = ?, class = ? WHERE regNo = ?';
-  db.query(sql, [name, department, classValue, regNo], (err, result) => {
-    if (err) throw err;
-    res.send('Student updated...');
-  });
-});
-
-// Delete a student
-app.delete('/students/:regNo', (req, res) => {
-  const { regNo } = req.params;
-  const sql = 'DELETE FROM students WHERE regNo = ?';
-  db.query(sql, [regNo], (err, result) => {
-    if (err) throw err;
-    res.send('Student deleted...');
-  });
-});
-
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => app.listen(5000, () => console.log("Server running on port 5000")))
+  .catch(err => console.log(err));
